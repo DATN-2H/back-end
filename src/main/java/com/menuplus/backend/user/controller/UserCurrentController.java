@@ -20,7 +20,7 @@ public class UserCurrentController {
         return Response.success(userService.signIn(request));
     }
 
-    @PostMapping(value = "/sign-out", consumes = Constant.API_CONTENT_TYPE)
+    @PostMapping(value = "/sign-out")
     public Response<SignOutResponse> signOut() {
         return Response.success(userService.signOut());
     }

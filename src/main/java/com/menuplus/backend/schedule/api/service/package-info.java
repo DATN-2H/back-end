@@ -1,2 +1,2 @@
 @org.springframework.modulith.NamedInterface("scheduling-service")
-package com.menuplus.backend.scheduling.api.service;
+package com.menuplus.backend.schedule.api.service;

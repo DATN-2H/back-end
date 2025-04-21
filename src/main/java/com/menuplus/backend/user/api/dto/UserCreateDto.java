@@ -1,6 +1,5 @@
 package com.menuplus.backend.user.api.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.menuplus.backend.library.enumeration.Gender;
 import lombok.Data;
 
@@ -14,8 +13,7 @@ public class UserCreateDto {
     @NotNull(message = "{account.email.null}")
     private String email;
     private String username;
-    private String firstname;
-    private String lastname;
+    private String fullName;
     private LocalDate birthdate;
     private Gender gender;
     private String phoneNumber;

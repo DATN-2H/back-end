@@ -1,4 +1,4 @@
-package com.menuplus.backend.scheduling.common;
+package com.menuplus.backend.schedule.common;
 
 import com.menuplus.backend.library.common.ApiMessageBase;
 import lombok.Getter;

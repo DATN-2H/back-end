@@ -45,11 +45,19 @@ public class UserServiceImp implements UserService {
     @Lazy
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    @Lazy
     private AuthenticationManager authenticationManager;
 
+    @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    @Lazy
     private AuthorizationService authorizationService;
+
+    @Autowired
+    private PersistentUtil persistentUtil;
 
     @Transactional
     @Override
@@ -74,7 +82,7 @@ public class UserServiceImp implements UserService {
             userRoleService.createMany(userRoles);
         }
 
-        PersistentUtil.flushAndClear();
+        persistentUtil.flushAndClear();
         return detail(user.getId());
     }
 
@@ -109,7 +117,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public SignOutResponse signOut() {
-        return null;
+        return new SignOutResponse();
     }
 
     @Transactional
@@ -170,7 +178,7 @@ public class UserServiceImp implements UserService {
             userRoleService.upsert(id, userRoles);
         }
 
-        PersistentUtil.flushAndClear();
+        persistentUtil.flushAndClear();
         return detail(user.getId());
     }
 

@@ -1,2 +1,2 @@
 @org.springframework.modulith.ApplicationModule
-package com.menuplus.backend.scheduling;
+package com.menuplus.backend.schedule;

@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8090
   compression:
     enabled: true
 
@@ -46,7 +46,7 @@ spring:
 
 
 auth:
-  jwtSecret: ${MP_AUTH_JWT_SECRET:dkzxhoj8328ijqju3cam}
+  jwtSecret: ${MP_AUTH_JWT_SECRET:dkzxhoj8328ijqju3camw9e74nd7vdsytpc9auvh}
   jwtExpire: 864000000
 
 springdoc:

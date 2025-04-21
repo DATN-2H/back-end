@@ -43,6 +43,9 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private AuthorizationService authorizationService;
 
+    @Autowired
+    private PersistentUtil persistentUtil;
+
     @Override
     @Transactional
     public RoleResponseDto create(RoleCreateDto createDto) {
@@ -60,7 +63,7 @@ public class RoleServiceImpl implements RoleService {
             roleScreenService.createMany(roleScreens);
         }
 
-        PersistentUtil.flushAndClear();
+        persistentUtil.flushAndClear();
         return detail(role.getId());
     }
 
@@ -89,7 +92,7 @@ public class RoleServiceImpl implements RoleService {
         }
         roleScreenService.upsert(role.getId(), roleScreens);
 
-        PersistentUtil.flushAndClear();
+        persistentUtil.flushAndClear();
         return detail(role.getId());
     }
 
