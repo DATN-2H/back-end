@@ -1,0 +1,37 @@
+name: CI - Build and Test Spring Boot
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout mã nguồn
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Cài đặt Java 21
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin' # Eclipse Temurin là bản phân phối JDK phổ biến
+
+      # Cache Maven dependencies để tăng tốc build
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # Chạy build và test
+      - name: Build and Test
+        run: mvn clean install
