@@ -1,4 +1,3 @@
 package com.menuplus.backend.bot.repository;
 
-public class BotRepository {
-}
+public class BotRepository {}

@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class ApiException extends RuntimeException {
+
   private final int code;
   private final String message;
 
@@ -32,10 +33,14 @@ public class ApiException extends RuntimeException {
     this.message = message;
   }
 
-  public ApiException(int code, String message, boolean needTranslate, Object[] translatorObjects) {
+  public ApiException(
+    int code,
+    String message,
+    boolean needTranslate,
+    Object[] translatorObjects
+  ) {
     super(message);
     this.code = code;
     this.message = message;
   }
-
 }

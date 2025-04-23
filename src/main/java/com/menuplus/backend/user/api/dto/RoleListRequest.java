@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Data
 public class RoleListRequest extends BaseListRequest {
-    private String name;
-    private String description;
+
+  private String name;
+  private String description;
 }

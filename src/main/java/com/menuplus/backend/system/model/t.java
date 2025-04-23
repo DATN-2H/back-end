@@ -1,4 +1,3 @@
 package com.menuplus.backend.system.model;
 
-public class t {
-}
+public class t {}

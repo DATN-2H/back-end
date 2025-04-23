@@ -1,4 +1,3 @@
 package com.menuplus.backend.report.repository;
 
-public class t {
-}
+public class t {}

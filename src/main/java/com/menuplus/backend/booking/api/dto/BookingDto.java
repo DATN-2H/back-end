@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class BookingDto {
-    private String id;
+
+  private String id;
 }

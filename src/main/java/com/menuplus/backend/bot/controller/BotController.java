@@ -1,4 +1,3 @@
 package com.menuplus.backend.bot.controller;
 
-public class BotController {
-}
+public class BotController {}

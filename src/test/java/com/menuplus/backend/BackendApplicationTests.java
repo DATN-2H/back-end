@@ -10,14 +10,15 @@ import org.springframework.modulith.docs.Documenter;
 @SpringBootTest
 class BackendApplicationTests {
 
-	@Test
-	void writeDocumentationSnippets() {
+  @Test
+  void writeDocumentationSnippets() {
+    var modules = ApplicationModules.of(
+      BackendApplication.class,
+      JavaClass.Predicates.resideInAnyPackage("com.menuplus.backend.library..")
+    ).verify();
 
-		var modules = ApplicationModules.of(BackendApplication.class, JavaClass.Predicates.resideInAnyPackage("com.menuplus.backend.library..")).verify();
-
-		new Documenter(modules)
-				.writeModulesAsPlantUml()
-				.writeIndividualModulesAsPlantUml();
-	}
-
+    new Documenter(modules)
+      .writeModulesAsPlantUml()
+      .writeIndividualModulesAsPlantUml();
+  }
 }

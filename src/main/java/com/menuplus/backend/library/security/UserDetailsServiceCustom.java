@@ -10,16 +10,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceCustom implements UserDetailsService {
 
-    @Autowired
-    UserSecurityService userSecurityService;
+  @Autowired
+  UserSecurityService userSecurityService;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userSecurityService.loadUserByUsername(email);
-    }
+  @Override
+  public UserDetails loadUserByUsername(String email)
+    throws UsernameNotFoundException {
+    return userSecurityService.loadUserByUsername(email);
+  }
 
-    public UserDetails loadUserByUserClaims(UserClaims userClaims) {
-        return new UserDetailsCustom(userClaims);
-    }
-
+  public UserDetails loadUserByUserClaims(UserClaims userClaims) {
+    return new UserDetailsCustom(userClaims);
+  }
 }

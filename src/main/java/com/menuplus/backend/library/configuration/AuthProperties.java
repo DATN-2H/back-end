@@ -9,8 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class AuthProperties {
 
-    private String jwtSecret;
+  private String jwtSecret;
 
-    private Long jwtExpire;
-
+  private Long jwtExpire;
 }

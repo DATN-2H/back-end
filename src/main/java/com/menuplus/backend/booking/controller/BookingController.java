@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/bookings")
 public class BookingController {
-    // Define your endpoints and methods here
-    // For example:
-     @GetMapping("")
-     public String getAllBookings() {
-         return "QUAAAAAA";
-     }
+
+  // Define your endpoints and methods here
+  // For example:
+  @GetMapping("")
+  public String getAllBookings() {
+    return "QUAAAAAA";
+  }
 }

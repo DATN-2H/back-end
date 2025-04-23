@@ -5,8 +5,10 @@ import lombok.Data;
 
 @Data
 public class RoleScreenCreateDto {
-    private Long id;
-    private Long roleId;
-    @NotNull
-    private Long screenId;
+
+  private Long id;
+  private Long roleId;
+
+  @NotNull
+  private Long screenId;
 }

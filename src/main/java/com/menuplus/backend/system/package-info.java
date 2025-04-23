@@ -1,2 +1,2 @@
 @org.springframework.modulith.ApplicationModule
-package com.menuplus.backend.system;;
+package com.menuplus.backend.system;

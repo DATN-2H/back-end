@@ -11,6 +11,7 @@ This project is built using the following technologies:
 1. **Build the project**:
 
    ```bash
+   npm install
    mvn clean install
    ```
 

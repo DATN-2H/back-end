@@ -1,4 +1,3 @@
 package com.menuplus.backend.menu.service;
 
-public class t {
-}
+public class t {}

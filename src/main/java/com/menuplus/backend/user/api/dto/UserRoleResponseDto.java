@@ -4,9 +4,10 @@ import lombok.Data;
 
 @Data
 public class UserRoleResponseDto {
-    private Long id;
-    private Long userId;
-    private Long roleId;
 
-    private RoleResponseDto role;
+  private Long id;
+  private Long userId;
+  private Long roleId;
+
+  private RoleResponseDto role;
 }

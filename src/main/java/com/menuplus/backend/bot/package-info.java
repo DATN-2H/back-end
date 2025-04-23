@@ -1,4 +1,4 @@
 @org.springframework.modulith.ApplicationModule(
-        allowedDependencies = "booking :: *"
+  allowedDependencies = "booking :: *"
 )
 package com.menuplus.backend.bot;

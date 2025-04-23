@@ -26,5 +26,6 @@ replay_pid*
 # VSCode
 .vscode
 .idea
+node_modules
 
 target
