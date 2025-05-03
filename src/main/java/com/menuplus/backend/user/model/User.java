@@ -2,6 +2,7 @@ package com.menuplus.backend.user.model;
 
 import com.menuplus.backend.library.common.EntityBase;
 import com.menuplus.backend.library.enumeration.Gender;
+import com.menuplus.backend.modelTemp.Branch;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -33,6 +34,13 @@ public class User extends EntityBase {
   private String phoneNumber;
   private Boolean isFullRole;
   private String password;
+
+  @Column(nullable = false)
+  private Boolean isManager = false;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "branchId")
+  private Branch branch;
 
   @OneToMany(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", insertable = false, updatable = false)

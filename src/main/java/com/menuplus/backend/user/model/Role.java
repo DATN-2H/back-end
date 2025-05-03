@@ -1,6 +1,7 @@
 package com.menuplus.backend.user.model;
 
 import com.menuplus.backend.library.common.EntityBase;
+import com.menuplus.backend.library.enumeration.SystemRole;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +18,9 @@ public class Role extends EntityBase {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String name;
+  @Enumerated(EnumType.STRING)
+  private SystemRole name;
+
   private String description;
 
   @OneToMany(fetch = FetchType.LAZY)

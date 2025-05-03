@@ -1,5 +1,7 @@
 # Project Overview
 
+Lấy model trong modelTemp ra xách vào đúng ffolder rồi code. ModelTemp chỉ để tạo database thôi.
+
 This project is built using the following technologies:
 
 - **PostgreSQL 16**
