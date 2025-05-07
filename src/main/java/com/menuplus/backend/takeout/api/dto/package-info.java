@@ -1,2 +1,2 @@
-@org.springframework.modulith.NamedInterface("takeout-dto")
+//@org.springframework.modulith.NamedInterface("takeout-dto")
 package com.menuplus.backend.takeout.api.dto;

@@ -18,15 +18,16 @@ spring:
 
   jpa:
     hibernate:
-#      ddl-auto: validate
-      ddl-auto: update # Uncomment this line to enable auto schema update
+      ddl-auto: validate
+#      ddl-auto: update # Uncomment this line to enable auto schema update
     show-sql: true
 #    properties:
 #      hibernate:
 #        format_sql: true
 
   flyway:
-    enabled: false
+    enabled: true
+#    enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: true
 

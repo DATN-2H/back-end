@@ -28,6 +28,7 @@ public class Product extends EntityBase {
   private String image; // Lưu URL ảnh
   private String description;
   private Integer estimateTime; // đơn vị: phút
+  private String groupName; // tên nhóm món ăn => dùng để phân loại cho biến thể
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "categoryId", nullable = false)

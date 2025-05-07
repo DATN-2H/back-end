@@ -150,6 +150,7 @@ public class UserServiceImp implements UserService {
     authorizationService.removeTokenUser(true);
   }
 
+  @Transactional
   @Override
   public List<PermissionEvaluateDto> getPermissionEvaluate(Long userId) {
     User user = get(userId);

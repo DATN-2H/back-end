@@ -18,7 +18,7 @@ public class UserCreateDto {
   private LocalDate birthdate;
   private Gender gender;
   private String phoneNumber;
-  private Boolean isFullRole;
+  private Boolean isFullRole = false;
   private String password;
 
   private List<@Valid UserRoleCreateDto> userRoles;

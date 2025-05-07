@@ -36,45 +36,67 @@ public class PermissionValidator {
     HttpServletRequest request
   ) {
     UserDetailsCustom userCustom = UserDetailsCustom.getCurrentUser();
-    if (null == userCustom) {
+    if (userCustom == null) {
       log.error(
-        "PermissionValidator: don't have permission url={}, method={}",
-        request.getServletPath().replaceAll("[\\n]", ""),
+        "PermissionValidator: no user found for request {} {}",
+        request.getServletPath(),
         request.getMethod()
       );
       return false;
     }
-    UserDtoResponse user = userService.detail(userCustom.getUserId());
-    if (hasFullRole()) {
-      return true;
-    }
+
+    if (hasFullRole()) return true;
+
     List<PermissionEvaluateDto> permissionEvaluateDtos =
       userService.getPermissionEvaluate(userCustom.getUserId());
-    var requestMappingInfo = getMappingInfo(request);
+
+    RequestMappingInfo requestMappingInfo = getMappingInfo(request);
+    if (requestMappingInfo == null) return false;
+
     RequestMethod method = requestMappingInfo
       .getMethodsCondition()
       .getMethods()
       .stream()
       .findFirst()
-      .get();
-    String pattern = requestMappingInfo
-      .getPatternsCondition()
-      .getPatterns()
-      .stream()
-      .findFirst()
-      .get();
-
-    PermissionEvaluateDto matchedPermissionEvaluate = permissionEvaluateDtos
-      .stream()
-      .filter(pv -> pv.getMethod() == method && pv.getPattern().equals(pattern))
-      .findFirst()
       .orElse(null);
 
-    if (matchedPermissionEvaluate == null) {
+    String pattern = null;
+    if (requestMappingInfo.getPatternsCondition() != null) {
+      pattern = requestMappingInfo
+        .getPatternsCondition()
+        .getPatterns()
+        .stream()
+        .findFirst()
+        .orElse(null);
+    } else if (requestMappingInfo.getPathPatternsCondition() != null) {
+      pattern = requestMappingInfo
+        .getPathPatternsCondition()
+        .getPatternValues()
+        .stream()
+        .findFirst()
+        .orElse(null);
+    }
+
+    if (method == null || pattern == null) {
+      log.warn("Could not determine method or pattern from requestMappingInfo");
+      return false;
+    }
+
+    final RequestMethod finalMethod = method;
+    final String finalPattern = pattern;
+
+    boolean matched = permissionEvaluateDtos
+      .stream()
+      .anyMatch(
+        pv ->
+          pv.getMethod() == finalMethod && pv.getPattern().equals(finalPattern)
+      );
+
+    if (!matched) {
       log.error(
-        "PermissionValidator: don't have match permission url={}, method={}",
-        request.getServletPath().replaceAll("[\\n]", ""),
-        request.getMethod()
+        "PermissionValidator: no matching permission for {} {}",
+        request.getServletPath(),
+        method
       );
       return false;
     }

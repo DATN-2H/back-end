@@ -1,111 +1,133 @@
-# Project Overview
+# Tổng quan dự án
 
-Lấy model trong modelTemp ra xách vào đúng ffolder rồi code. ModelTemp chỉ để tạo database thôi.
+**Mục đích sử dụng thư mục `modelTemp`:**
+Thư mục `modelTemp` chỉ dùng để tạo database ban đầu. Sau khi tạo xong, bạn cần **di chuyển các model cần dùng sang đúng thư mục** để sử dụng trong code chính.
 
-This project is built using the following technologies:
+### Hướng dẫn chạy dự án lần đầu:
 
-- **PostgreSQL 16**
-- **Java 21**
-- **Spring Boot 3.2**
+1. Mở file `application.yml`
+2. Chỉnh lại 2 dòng sau:
 
-## How to Run the Project
+   ```yaml
+   spring:
+     jpa:
+       hibernate:
+         ddl-auto: update
+     flyway:
+       enabled: false
+   ```
 
-1. **Build the project**:
+### Chạy lần thứ hai:
+
+1. Tiếp tục mở lại `application.yml`
+2. Chỉnh lại như sau:
+
+   ```yaml
+   spring:
+     jpa:
+       hibernate:
+         ddl-auto: validate
+     flyway:
+       enabled: true  # lấy dữ liệu giả (data fake)
+   ```
+
+---
+
+## Công nghệ sử dụng
+
+Dự án sử dụng các công nghệ sau:
+
+* **PostgreSQL 16**
+* **Java 21**
+* **Spring Boot 3.2**
+
+---
+
+## Cách chạy dự án
+
+1. **Build dự án**:
 
    ```bash
    npm install
    mvn clean install
    ```
 
-2. **Run the Spring Boot application**:
+2. **Chạy ứng dụng Spring Boot**:
 
    ```bash
    mvn spring-boot:run
    ```
 
-## Project Structure
+---
 
-The project consists of **11 modules**:
+## Cấu trúc dự án
 
-- **Booking**
-- **Bot**
-- **Delivery**
-- **EatIn**
-- **Kitchen**
-- **Menu**
-- **Report**
-- **Schedule**
-- **TakeOut**
-- **User** (Basic structure completed)
+Dự án gồm **11 module** chính:
 
-**Shared Library**:
-- **Library**: Contains commonly used classes and utilities shared across modules.
+* **Booking** (Đặt chỗ)
+* **Bot**
+* **Delivery** (Giao hàng)
+* **EatIn** (Ăn tại chỗ)
+* **Kitchen** (Bếp)
+* **Menu** (Thực đơn)
+* **Report** (Báo cáo)
+* **Schedule** (Lịch trình)
+* **TakeOut** (Mang đi)
+* **User** (Đã hoàn thành khung cơ bản)
 
-### Module Structure (Example: User Module)
+### Thư viện dùng chung:
 
-Each module follows the same structure. Below is the breakdown of the module structure:
+* **Library**: Chứa các class và tiện ích được dùng chung giữa các module.
+
+---
+
+### Cấu trúc mỗi module (ví dụ: module `User`)
+
+Mỗi module đều có cấu trúc giống nhau, gồm:
 
 #### `api`
-- **dto**: Contains DTO (Data Transfer Object) classes. These classes are used to transfer data between modules.
-- **event**: Contains Event classes. These are used to transfer data asynchronously between modules.
-- **mapper**: Contains Mapper classes. These classes are responsible for converting between DTOs and Entities.
-- **service**: Contains Service classes. These are responsible for handling the business logic of the module. Other modules communicate with this module through Service interfaces.
+
+* `dto`: Định nghĩa các lớp DTO (Data Transfer Object) – dùng để trao đổi dữ liệu giữa các module.
+* `event`: Định nghĩa các sự kiện để truyền dữ liệu bất đồng bộ giữa các module.
+* `mapper`: Chuyển đổi giữa DTO và Entity.
+* `service`: Khai báo các interface cho phần xử lý nghiệp vụ (business logic), module khác sẽ gọi qua đây.
 
 #### `common`
-- Temporarily contains status codes and messages (e.g., `Api___Message.java`).
+
+* Tạm thời chứa các mã trạng thái và thông báo hệ thống (`Api___Message.java`, ...)
 
 #### `controller`
-- Contains Controller classes. These classes handle requests from the client.
+
+* Giao tiếp với client (API), xử lý các request gửi từ phía frontend.
 
 #### `model`
-- Contains Entity classes. These classes are used to store data in the database.
+
+* Chứa các Entity tương ứng với bảng dữ liệu trong database.
 
 #### `repository`
-- Contains Repository classes. These classes are responsible for querying the database.
+
+* Giao tiếp với database (CRUD, query...).
 
 #### `service`
-- Contains Service implementation classes. These classes provide the actual implementation for the Service interfaces.
 
-### Communication Between Modules
-
-- **Asynchronous Communication**: Modules communicate via Events.
-- **Synchronous Communication**: Modules communicate via Services.
-
-### API Declaration and Dependencies
-
-When using the `@ApplicationModule` annotation in your module, don't forget to declare the allowed dependencies in `package-info.java`. Example:
-
-```java
-@org.springframework.modulith.ApplicationModule(
-    allowedDependencies = "booking :: *, bot :: *"
-)
-package com.menuplus.backend.bot;
-```
-
-This ensures proper communication and dependencies between the modules.
+* Chứa phần hiện thực của `service` (logic xử lý chính).
 
 ---
 
-## Library Structure
+### Giao tiếp giữa các module
 
-The **Library** module contains shared classes used across all modules. It follows the structure below:
-
-- **dto**: Contains basic DTO classes, such as `ListRequest`, which are commonly inherited and used in multiple modules.
-- **enumeration**: Contains Enum classes. These define fixed values, such as status codes or predefined constants. New enums should be added here.
-- **common**: Contains commonly used classes such as `Response`, `PageResponse`, etc.
-- **util**: Contains utility classes like `DateUtil`, `StringUtil`, and other helper classes.
-- **configuration**: Contains configuration classes for application setup.
-- **security**: Contains security-related classes and configurations.
-- **exception**: Contains custom exception classes for error handling.
-
-## Contribution Guidelines
-
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature-name`).
-3. Commit your changes (`git commit -am 'Add new feature'`).
-4. Push to the branch (`git push origin feature-name`).
-5. Open a pull request.
+* **Giao tiếp đồng bộ (Synchronous)**: Các module gọi lẫn nhau thông qua các interface của `service`.
 
 ---
 
-Let me know if you need any further modifications or clarifications!
+## Cấu trúc thư viện chung (`Library`)
+
+Module `Library` là nơi chứa các thành phần dùng chung trong toàn bộ hệ thống, gồm:
+
+* **dto**: Các lớp DTO cơ bản như `ListRequest`, dùng lặp lại ở nhiều module.
+* **enumeration**: Chứa các Enum (trạng thái, mã cố định...). Khi cần Enum mới, thêm vào đây.
+* **common**: Các class tiện ích chung như `Response`, `PageResponse`,...
+* **util**: Class hỗ trợ như `DateUtil`, `StringUtil`, v.v.
+* **configuration**: Các thiết lập cấu hình cho toàn ứng dụng.
+* **security**: Thiết lập bảo mật và các class liên quan đến an ninh hệ thống.
+* **exception**: Định nghĩa các loại exception tuỳ chỉnh để xử lý lỗi rõ ràng.

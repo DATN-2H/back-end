@@ -1,16 +1,17 @@
 package com.menuplus.backend.user.api.dto;
 
 import com.menuplus.backend.library.enumeration.GeneralStatus;
+import com.menuplus.backend.library.enumeration.SystemRole;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.Data;
 
 @Data
 public class RoleCreateDto {
 
-  @NotEmpty
-  private String name;
+  @NotNull
+  private SystemRole name;
 
   private String description;
   private GeneralStatus status;

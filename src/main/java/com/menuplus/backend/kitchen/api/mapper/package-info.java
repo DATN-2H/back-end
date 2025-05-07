@@ -1,2 +1,2 @@
-@org.springframework.modulith.NamedInterface("kitchen-mapper")
+//@org.springframework.modulith.NamedInterface("kitchen-mapper")
 package com.menuplus.backend.kitchen.api.mapper;
