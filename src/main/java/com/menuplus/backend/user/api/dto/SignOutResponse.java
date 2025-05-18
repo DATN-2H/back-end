@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class SignOutResponse {
 
-  private String dummy = "dummy";
+    private String dummy = "dummy";
 }

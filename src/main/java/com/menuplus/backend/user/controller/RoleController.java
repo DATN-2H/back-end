@@ -15,43 +15,43 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/role")
 public class RoleController {
 
-  @Autowired
-  private RoleService roleService;
+    @Autowired
+    private RoleService roleService;
 
-  @PostMapping(value = "")
-  public Response<RoleResponseDto> create(
-    @Valid @RequestBody RoleCreateDto createDto
-  ) {
-    return Response.success(
-      roleService.create(createDto),
-      ApiUserMessage.ROLE_CREATE_SUCCESS
-    );
-  }
+    @PostMapping(value = "")
+    public Response<RoleResponseDto> create(
+        @Valid @RequestBody RoleCreateDto createDto
+    ) {
+        return Response.success(
+            roleService.create(createDto),
+            ApiUserMessage.ROLE_CREATE_SUCCESS
+        );
+    }
 
-  @PutMapping(value = "/{id}")
-  public Response<RoleResponseDto> update(
-    @PathVariable Long id,
-    @Valid @RequestBody RoleUpdateDto updateDto
-  ) {
-    return Response.success(
-      roleService.update(id, updateDto),
-      ApiUserMessage.ROLE_UPDATE_SUCCESS
-    );
-  }
+    @PutMapping(value = "/{id}")
+    public Response<RoleResponseDto> update(
+        @PathVariable Long id,
+        @Valid @RequestBody RoleUpdateDto updateDto
+    ) {
+        return Response.success(
+            roleService.update(id, updateDto),
+            ApiUserMessage.ROLE_UPDATE_SUCCESS
+        );
+    }
 
-  @DeleteMapping(value = "/{id}")
-  public Response<Void> delete(@PathVariable Long id) {
-    roleService.delete(id);
-    return Response.success(ApiUserMessage.ROLE_DELETE_SUCCESS);
-  }
+    @DeleteMapping(value = "/{id}")
+    public Response<Void> delete(@PathVariable Long id) {
+        roleService.delete(id);
+        return Response.success(ApiUserMessage.ROLE_DELETE_SUCCESS);
+    }
 
-  @GetMapping(value = "/{id}")
-  public Response<RoleResponseDto> detail(@PathVariable Long id) {
-    return Response.success(roleService.detail(id));
-  }
+    @GetMapping(value = "/{id}")
+    public Response<RoleResponseDto> detail(@PathVariable Long id) {
+        return Response.success(roleService.detail(id));
+    }
 
-  @GetMapping(value = "")
-  public Response<List<RoleResponseDto>> list() {
-    return Response.success(roleService.list());
-  }
+    @GetMapping(value = "")
+    public Response<List<RoleResponseDto>> list() {
+        return Response.success(roleService.list());
+    }
 }

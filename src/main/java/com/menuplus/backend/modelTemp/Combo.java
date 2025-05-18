@@ -12,22 +12,22 @@ import lombok.*;
 @Entity
 public class Combo extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(nullable = false)
-  private String name;
+    @Column(nullable = false)
+    private String name;
 
-  private String description;
+    private String description;
 
-  @Column(nullable = false)
-  private BigDecimal price;
+    @Column(nullable = false)
+    private BigDecimal price;
 
-  @OneToMany(
-    mappedBy = "combo",
-    cascade = CascadeType.ALL,
-    orphanRemoval = true
-  )
-  private List<ComboProduct> comboProducts = new ArrayList<>();
+    @OneToMany(
+        mappedBy = "combo",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<ComboProduct> comboProducts = new ArrayList<>();
 }

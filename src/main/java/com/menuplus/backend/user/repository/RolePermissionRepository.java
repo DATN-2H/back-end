@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RolePermissionRepository
-  extends JpaRepository<RolePermission, Long> {
-  List<RolePermission> findByRoleId(Long roleId);
+    extends JpaRepository<RolePermission, Long> {
+    List<RolePermission> findByRoleId(Long roleId);
 
-  @Modifying
-  void deleteByRoleId(Long roleId);
+    @Modifying
+    void deleteByRoleId(Long roleId);
 }

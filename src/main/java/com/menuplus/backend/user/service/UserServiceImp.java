@@ -1,5 +1,7 @@
 package com.menuplus.backend.user.service;
 
+import static com.menuplus.backend.user.common.ApiUserMessage.ACCOUNT_NOT_FOUND;
+
 import com.menuplus.backend.library.common.AuthorizationService;
 import com.menuplus.backend.library.enumeration.GeneralStatus;
 import com.menuplus.backend.library.exception.ApiException;
@@ -33,197 +35,218 @@ import org.springframework.util.StringUtils;
 @Service
 public class UserServiceImp implements UserService {
 
-  @Autowired
-  private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-  @Autowired
-  private UserRoleService userRoleService;
+    @Autowired
+    private UserRoleService userRoleService;
 
-  @Autowired
-  @Lazy
-  PasswordEncoder passwordEncoder;
+    @Autowired
+    @Lazy
+    PasswordEncoder passwordEncoder;
 
-  @Autowired
-  @Lazy
-  private AuthenticationManager authenticationManager;
+    @Autowired
+    @Lazy
+    private AuthenticationManager authenticationManager;
 
-  @Autowired
-  private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
-  @Autowired
-  @Lazy
-  private AuthorizationService authorizationService;
+    @Autowired
+    @Lazy
+    private AuthorizationService authorizationService;
 
-  @Autowired
-  private PersistentUtil persistentUtil;
+    @Autowired
+    private PersistentUtil persistentUtil;
 
-  @Transactional
-  @Override
-  public UserDtoResponse create(UserCreateDto createDto) {
-    User existedUser = userRepository.findByEmail(createDto.getEmail());
-    if (existedUser != null) {
-      throw new ApiException(ApiUserMessage.ACCOUNT_EXISTED);
+    @Transactional
+    @Override
+    public UserDtoResponse create(UserCreateDto createDto) {
+        User existedUser = userRepository.findByEmail(createDto.getEmail());
+        if (existedUser != null) {
+            throw new ApiException(ApiUserMessage.ACCOUNT_EXISTED);
+        }
+
+        User user = UserMapper.createUserFromRegisterRequest(createDto);
+        String password = createDto.getPassword();
+        if (!StringUtils.hasText(password)) {
+            password = RandomUtil.generateCode(10, false);
+        }
+        user.setPassword(passwordEncoder.encode(password));
+        user.setUsername(user.getEmail());
+        userRepository.save(user);
+
+        var userRoles = createDto.getUserRoles();
+        if (userRoles != null) {
+            userRoles.forEach(ur -> ur.setUserId(user.getId()));
+            userRoleService.createMany(userRoles);
+        }
+
+        persistentUtil.flushAndClear();
+        return detail(user.getId());
     }
 
-    User user = UserMapper.createUserFromRegisterRequest(createDto);
-    String password = createDto.getPassword();
-    if (!StringUtils.hasText(password)) {
-      password = RandomUtil.generateCode(10, false);
-    }
-    user.setPassword(passwordEncoder.encode(password));
-    user.setUsername(user.getEmail());
-    userRepository.save(user);
+    @Transactional
+    @Override
+    public SignInResponse signIn(SignInRequest request) {
+        User user = userRepository.findByEmailAndStatusIsNot(
+            request.getEmail(),
+            GeneralStatus.DELETED
+        );
+        if (user == null) {
+            throw new ApiException(ApiUserMessage.ACCOUNT_NOT_FOUND);
+        }
+        if (user.getStatus() != GeneralStatus.ACTIVE) {
+            throw new ApiException(ApiUserMessage.ACCOUNT_IS_INACTIVE);
+        }
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()
+                )
+            );
+            String token = jwtTokenProvider.generateToken(
+                (UserDetailsCustom) authentication.getPrincipal()
+            );
+            authorizationService.addToken(user.getId(), token);
 
-    var userRoles = createDto.getUserRoles();
-    if (userRoles != null) {
-      userRoles.forEach(ur -> ur.setUserId(user.getId()));
-      userRoleService.createMany(userRoles);
-    }
-
-    persistentUtil.flushAndClear();
-    return detail(user.getId());
-  }
-
-  @Transactional
-  @Override
-  public SignInResponse signIn(SignInRequest request) {
-    User user = userRepository.findByEmailAndStatusIsNot(
-      request.getEmail(),
-      GeneralStatus.DELETED
-    );
-    if (user == null) {
-      throw new ApiException(ApiUserMessage.ACCOUNT_NOT_FOUND);
-    }
-    if (user.getStatus() != GeneralStatus.ACTIVE) {
-      throw new ApiException(ApiUserMessage.ACCOUNT_IS_INACTIVE);
-    }
-    try {
-      Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(
-          request.getEmail(),
-          request.getPassword()
-        )
-      );
-      String token = jwtTokenProvider.generateToken(
-        (UserDetailsCustom) authentication.getPrincipal()
-      );
-      authorizationService.addToken(user.getId(), token);
-
-      SignInResponse signInDto = new SignInResponse();
-      signInDto.setToken(token);
-      signInDto.setAccount(UserMapper.createResponse(user));
-      return signInDto;
-    } catch (Exception e) {
-      throw new ApiException(ApiUserMessage.ACCOUNT_PASSWORD_MISMATCH);
-    }
-  }
-
-  @Override
-  public SignOutResponse signOut() {
-    return new SignOutResponse();
-  }
-
-  @Transactional
-  @Override
-  public UserClaims verifyToken(VerifyTokenRequest request) {
-    return jwtTokenProvider.getUserClaimsFromToken(request.getToken());
-  }
-
-  @Override
-  public void forgetPassword(UserForgetPasswordRequest request) {
-    // TODO: Implement this method
-  }
-
-  @Override
-  public void changePassword(UserChangePasswordRequest request) {
-    UserDetailsCustom currentUser = UserDetailsCustom.getCurrentUser();
-    User user = userRepository.findById(currentUser.getUserId()).get();
-
-    if (
-      !passwordEncoder.matches(request.getPassword().trim(), user.getPassword())
-    ) {
-      throw new ApiException(ApiUserMessage.PASSWORD_MISMATCH);
+            SignInResponse signInDto = new SignInResponse();
+            signInDto.setToken(token);
+            signInDto.setAccount(UserMapper.createResponse(user));
+            return signInDto;
+        } catch (Exception e) {
+            throw new ApiException(ApiUserMessage.ACCOUNT_PASSWORD_MISMATCH);
+        }
     }
 
-    user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-    userRepository.save(user);
-    authorizationService.removeTokenUser(true);
-  }
-
-  @Transactional
-  @Override
-  public List<PermissionEvaluateDto> getPermissionEvaluate(Long userId) {
-    User user = get(userId);
-    List<PermissionEvaluateDto> permissionEvaluateDtos = new ArrayList<>();
-
-    for (UserRole userRole : user.getUserRoles()) {
-      Role role = userRole.getRole();
-      for (RolePermission rolePermission : role.getRolePermissions()) {
-        Permission permission = rolePermission.getPermission();
-
-        PermissionEvaluateDto dto = new PermissionEvaluateDto();
-        BeanUtils.copyProperties(permission, dto);
-        permissionEvaluateDtos.add(dto);
-      }
+    @Override
+    public SignOutResponse signOut() {
+        return new SignOutResponse();
     }
 
-    return permissionEvaluateDtos;
-  }
-
-  @Override
-  @Transactional
-  public UserDtoResponse update(Long id, UserUpdateDto updateDto) {
-    User user = userRepository
-      .findById(id)
-      .orElseThrow(() -> new ApiException(ApiUserMessage.ACCOUNT_NOT_FOUND));
-
-    MapUtil.copyUpdateProperties(updateDto, user);
-    userRepository.save(user);
-
-    var userRoles = updateDto.getUserRoles();
-    if (userRoles != null) {
-      userRoles.forEach(ur -> ur.setUserId(user.getId()));
-      userRoleService.upsert(id, userRoles);
+    @Transactional
+    @Override
+    public SignInResponse verifyToken(VerifyTokenRequest request) {
+        UserClaims userClaims = jwtTokenProvider.getUserClaimsFromToken(
+            request.getToken()
+        );
+        User user = userRepository
+            .findById(userClaims.getUserId())
+            .orElse(null);
+        SignInResponse signInResponse = new SignInResponse();
+        if (user != null) {
+            if (user.getStatus() == GeneralStatus.DELETED) {
+                throw new ApiException(ApiUserMessage.ACCOUNT_NOT_FOUND);
+            }
+            signInResponse.setAccount(UserMapper.createResponse(user));
+        } else {
+            throw new ApiException(ApiUserMessage.ACCOUNT_NOT_FOUND);
+        }
+        signInResponse.setToken(request.getToken());
+        return signInResponse;
     }
 
-    persistentUtil.flushAndClear();
-    return detail(user.getId());
-  }
-
-  @Override
-  @Transactional
-  public UserDtoResponse detail(Long id) {
-    User user = get(id);
-    return UserMapper.createResponse(user);
-  }
-
-  @Override
-  @Transactional
-  public void delete(Long id) {
-    User user = get(id);
-    try {
-      hardDelete(user);
-    } catch (Exception ignore) {
-      softDelete(user);
+    @Override
+    public void forgetPassword(UserForgetPasswordRequest request) {
+        // TODO: Implement this method
     }
-  }
 
-  private User get(Long id) {
-    Optional<User> userOpt = userRepository.findById(id);
-    if (userOpt.isEmpty()) {
-      throw new ApiException(ApiUserMessage.ACCOUNT_NOT_FOUND);
+    @Override
+    public void changePassword(UserChangePasswordRequest request) {
+        UserDetailsCustom currentUser = UserDetailsCustom.getCurrentUser();
+        User user = userRepository.findById(currentUser.getUserId()).get();
+
+        if (
+            !passwordEncoder.matches(
+                request.getPassword().trim(),
+                user.getPassword()
+            )
+        ) {
+            throw new ApiException(ApiUserMessage.PASSWORD_MISMATCH);
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        authorizationService.removeTokenUser(true);
     }
-    return userOpt.get();
-  }
 
-  @Transactional
-  public void hardDelete(User user) {
-    userRepository.delete(user);
-  }
+    @Transactional
+    @Override
+    public List<PermissionEvaluateDto> getPermissionEvaluate(Long userId) {
+        User user = get(userId);
+        List<PermissionEvaluateDto> permissionEvaluateDtos = new ArrayList<>();
 
-  @Transactional
-  public void softDelete(User user) {
-    user.setStatus(GeneralStatus.DELETED);
-    userRepository.save(user);
-  }
+        for (UserRole userRole : user.getUserRoles()) {
+            Role role = userRole.getRole();
+            for (RolePermission rolePermission : role.getRolePermissions()) {
+                Permission permission = rolePermission.getPermission();
+
+                PermissionEvaluateDto dto = new PermissionEvaluateDto();
+                BeanUtils.copyProperties(permission, dto);
+                permissionEvaluateDtos.add(dto);
+            }
+        }
+
+        return permissionEvaluateDtos;
+    }
+
+    @Override
+    @Transactional
+    public UserDtoResponse update(Long id, UserUpdateDto updateDto) {
+        User user = userRepository
+            .findById(id)
+            .orElseThrow(() ->
+                new ApiException(ApiUserMessage.ACCOUNT_NOT_FOUND)
+            );
+
+        MapUtil.copyUpdateProperties(updateDto, user);
+        userRepository.save(user);
+
+        var userRoles = updateDto.getUserRoles();
+        if (userRoles != null) {
+            userRoles.forEach(ur -> ur.setUserId(user.getId()));
+            userRoleService.upsert(id, userRoles);
+        }
+
+        persistentUtil.flushAndClear();
+        return detail(user.getId());
+    }
+
+    @Override
+    @Transactional
+    public UserDtoResponse detail(Long id) {
+        User user = get(id);
+        return UserMapper.createResponse(user);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        User user = get(id);
+        try {
+            hardDelete(user);
+        } catch (Exception ignore) {
+            softDelete(user);
+        }
+    }
+
+    private User get(Long id) {
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isEmpty()) {
+            throw new ApiException(ApiUserMessage.ACCOUNT_NOT_FOUND);
+        }
+        return userOpt.get();
+    }
+
+    @Transactional
+    public void hardDelete(User user) {
+        userRepository.delete(user);
+    }
+
+    @Transactional
+    public void softDelete(User user) {
+        user.setStatus(GeneralStatus.DELETED);
+        userRepository.save(user);
+    }
 }

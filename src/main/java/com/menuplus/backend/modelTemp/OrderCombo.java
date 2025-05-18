@@ -11,21 +11,21 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class OrderCombo extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  private Integer quantity;
-  private String note;
+    private Integer quantity;
+    private String note;
 
-  @Enumerated(EnumType.STRING)
-  private ProductStatus productStatus;
+    @Enumerated(EnumType.STRING)
+    private ProductStatus productStatus;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "orderId", nullable = false)
-  private Order order;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orderId", nullable = false)
+    private Order order;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "comboId", nullable = false)
-  private Combo combo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comboId", nullable = false)
+    private Combo combo;
 }

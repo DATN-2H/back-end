@@ -14,24 +14,27 @@ import lombok.ToString;
 @Entity
 public class Role extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Enumerated(EnumType.STRING)
-  private SystemRole name;
+    @Enumerated(EnumType.STRING)
+    private SystemRole name;
 
-  private String description;
+    @Column(unique = true)
+    private String hexColor;
 
-  @OneToMany(fetch = FetchType.LAZY)
-  @JoinColumn(name = "roleId", insertable = false, updatable = false)
-  @EqualsAndHashCode.Exclude
-  @ToString.Exclude
-  private Set<RolePermission> rolePermissions = new HashSet<>();
+    private String description;
 
-  @OneToMany(fetch = FetchType.LAZY)
-  @JoinColumn(name = "roleId", insertable = false, updatable = false)
-  @EqualsAndHashCode.Exclude
-  @ToString.Exclude
-  private Set<RoleScreen> roleScreens = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "roleId", insertable = false, updatable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<RolePermission> rolePermissions = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "roleId", insertable = false, updatable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<RoleScreen> roleScreens = new HashSet<>();
 }

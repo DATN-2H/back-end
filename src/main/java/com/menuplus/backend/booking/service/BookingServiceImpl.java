@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class BookingServiceImpl implements BookingService {
 
-  @Override
-  public void test() {
-    System.out.println("BookingService test method called");
-  }
+    @Override
+    public void test() {
+        System.out.println("BookingService test method called");
+    }
 }

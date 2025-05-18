@@ -10,12 +10,12 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class Screen extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  private String code;
-  private String name;
-  private String menuGroup;
-  private String menuItem;
+    private String code;
+    private String name;
+    private String menuGroup;
+    private String menuItem;
 }

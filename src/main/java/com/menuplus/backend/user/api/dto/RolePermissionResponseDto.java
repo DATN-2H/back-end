@@ -8,11 +8,11 @@ import lombok.EqualsAndHashCode;
 @Data
 public class RolePermissionResponseDto extends BaseResponseDto {
 
-  private Long id;
-  private Long roleId;
-  private Long permissionId;
-  private Boolean isLimitedByOwner;
-  private String limitedIp;
+    private Long id;
+    private Long roleId;
+    private Long permissionId;
+    private Boolean isLimitedByOwner;
+    private String limitedIp;
 
-  private PermissionResponseDto permission;
+    private PermissionResponseDto permission;
 }

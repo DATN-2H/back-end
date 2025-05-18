@@ -13,23 +13,23 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class StaffShift extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(nullable = false)
-  private LocalDate date;
+    @Column(nullable = false)
+    private LocalDate date;
 
-  private String note;
+    private String note;
 
-  @Enumerated(EnumType.STRING)
-  private ShiftStatus shiftStatus;
+    @Enumerated(EnumType.STRING)
+    private ShiftStatus shiftStatus;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "shiftId", nullable = false)
-  private Shift shift;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shiftId", nullable = false)
+    private Shift shift;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "staffId", nullable = false)
-  private User staff;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "staffId", nullable = false)
+    private User staff;
 }

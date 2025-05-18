@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RoleScreenRepository extends JpaRepository<RoleScreen, Long> {
-  List<RoleScreen> findByRoleId(Long roleId);
+    List<RoleScreen> findByRoleId(Long roleId);
 
-  @Modifying
-  void deleteByRoleId(Long roleId);
+    @Modifying
+    void deleteByRoleId(Long roleId);
 }

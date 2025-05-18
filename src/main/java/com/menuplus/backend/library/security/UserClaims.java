@@ -13,20 +13,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserClaims {
 
-  private Long userId;
+    private Long userId;
 
-  private String email;
+    private String email;
 
-  private Date iat;
+    private Date iat;
 
-  private Date exp;
+    private Date exp;
 
-  @JsonIgnore
-  public Map<String, Object> getClaims() {
-    Map<String, Object> claims = new HashMap<>();
-    claims.put("userId", userId);
-    claims.put("iat", iat);
-    claims.put("exp", exp);
-    return claims;
-  }
+    @JsonIgnore
+    public Map<String, Object> getClaims() {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
+        claims.put("iat", iat);
+        claims.put("exp", exp);
+        return claims;
+    }
 }

@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 public class UserRoleCreateDto {
 
-  private Long id;
-  private Long userId;
+    private Long id;
+    private Long userId;
 
-  @NotNull
-  private Long roleId;
+    @NotNull
+    private Long roleId;
 }

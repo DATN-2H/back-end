@@ -13,15 +13,15 @@ import lombok.experimental.SuperBuilder;
 @Data
 public class UserListRequest extends BaseListRequest {
 
-  private List<Long> excludeIds;
-  private Boolean isFullRole;
+    private List<Long> excludeIds;
+    private Boolean isFullRole;
 
-  private String email;
-  private String username;
-  private String fullName;
-  private String birthdate;
-  private String gender;
-  private String phoneNumber;
+    private String email;
+    private String username;
+    private String fullName;
+    private String birthdate;
+    private String gender;
+    private String phoneNumber;
 
-  private String userRole;
+    private String userRole;
 }

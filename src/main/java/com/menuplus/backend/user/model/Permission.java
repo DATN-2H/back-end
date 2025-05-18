@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Entity
 public class Permission extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  private String code;
-  private String name;
-  private String permissionGroup;
+    private String code;
+    private String name;
+    private String permissionGroup;
 
-  @Enumerated(EnumType.STRING)
-  private RequestMethod method;
+    @Enumerated(EnumType.STRING)
+    private RequestMethod method;
 
-  private String pattern;
+    private String pattern;
 }

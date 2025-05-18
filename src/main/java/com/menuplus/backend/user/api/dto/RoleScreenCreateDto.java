@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 public class RoleScreenCreateDto {
 
-  private Long id;
-  private Long roleId;
+    private Long id;
+    private Long roleId;
 
-  @NotNull
-  private Long screenId;
+    @NotNull
+    private Long screenId;
 }

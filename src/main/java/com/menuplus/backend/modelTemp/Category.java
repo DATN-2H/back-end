@@ -9,15 +9,15 @@ import lombok.*;
 @Entity
 public class Category extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(unique = true, nullable = false)
-  private String code;
+    @Column(unique = true, nullable = false)
+    private String code;
 
-  @Column(unique = true, nullable = false)
-  private String name;
+    @Column(unique = true, nullable = false)
+    private String name;
 
-  private String description;
+    private String description;
 }

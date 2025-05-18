@@ -6,12 +6,12 @@ import lombok.Data;
 @Data
 public class RolePermissionCreateDto {
 
-  private Long id;
-  private Long roleId;
+    private Long id;
+    private Long roleId;
 
-  @NotNull
-  private Long permissionId;
+    @NotNull
+    private Long permissionId;
 
-  private Boolean isLimitedByOwner;
-  private String limitedIp;
+    private Boolean isLimitedByOwner;
+    private String limitedIp;
 }

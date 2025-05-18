@@ -1,6 +1,7 @@
 package com.menuplus.backend.modelTemp;
 
 import com.menuplus.backend.library.common.EntityBase;
+import com.menuplus.backend.user.model.Branch;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,24 +9,24 @@ import lombok.*;
 @Data
 @Entity
 @Table(
-  uniqueConstraints = {
-    @UniqueConstraint(columnNames = { "branch_id", "product_id" }),
-  }
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "branch_id", "product_id" }),
+    }
 )
 public class BranchProduct extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  private Integer stockQuantity;
-  private Integer stockThreshold;
+    private Integer stockQuantity;
+    private Integer stockThreshold;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "branchId", nullable = false)
-  private Branch branch;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "branchId", nullable = false)
+    private Branch branch;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "productId", nullable = false)
-  private Product product;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "productId", nullable = false)
+    private Product product;
 }

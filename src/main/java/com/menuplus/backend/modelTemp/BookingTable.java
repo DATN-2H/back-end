@@ -15,29 +15,29 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class BookingTable extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(nullable = false)
-  private LocalDateTime timeStart;
+    @Column(nullable = false)
+    private LocalDateTime timeStart;
 
-  private LocalDateTime timeEnd;
-  private Integer guestCount;
+    private LocalDateTime timeEnd;
+    private Integer guestCount;
 
-  @Enumerated(EnumType.STRING)
-  private BookingStatus bookingStatus;
+    @Enumerated(EnumType.STRING)
+    private BookingStatus bookingStatus;
 
-  private String note;
+    private String note;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "customerId", nullable = false)
-  private User customer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customerId", nullable = false)
+    private User customer;
 
-  @OneToMany(
-    mappedBy = "bookingTable",
-    cascade = CascadeType.ALL,
-    orphanRemoval = true
-  )
-  private List<BookingTableTable> bookingTables = new ArrayList<>();
+    @OneToMany(
+        mappedBy = "bookingTable",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<BookingTableTable> bookingTables = new ArrayList<>();
 }

@@ -11,23 +11,23 @@ import lombok.ToString;
 @Entity
 public class RolePermission extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  private Long roleId;
-  private Long permissionId;
-  private Boolean isLimitedByOwner;
-  private String limitedIp;
+    private Long roleId;
+    private Long permissionId;
+    private Boolean isLimitedByOwner;
+    private String limitedIp;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(
-    name = "permissionId",
-    referencedColumnName = "id",
-    insertable = false,
-    updatable = false
-  )
-  @EqualsAndHashCode.Exclude
-  @ToString.Exclude
-  private Permission permission;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+        name = "permissionId",
+        referencedColumnName = "id",
+        insertable = false,
+        updatable = false
+    )
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Permission permission;
 }

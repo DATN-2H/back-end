@@ -14,14 +14,19 @@ import org.springframework.util.StringUtils;
 @Data
 public class UserDtoResponse extends BaseResponseDto {
 
-  private Long id;
-  private String email;
-  private String username;
-  private String fullName;
-  private LocalDate birthdate;
-  private Gender gender;
-  private String phoneNumber;
-  private Boolean isFullRole;
+    private Long id;
+    private String email;
+    private String username;
+    private String fullName;
+    private LocalDate birthdate;
+    private Gender gender;
+    private String phoneNumber;
+    private Boolean isFullRole;
 
-  private List<UserRoleResponseDto> userRoles;
+    private List<UserRoleResponseDto> userRoles;
+    private BranchRespondDto branch;
+
+    public String getDisplayName() {
+        return username;
+    }
 }

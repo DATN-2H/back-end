@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class PermissionResponseDto {
 
-  private Long id;
-  private String code;
-  private String name;
-  private String permissionGroup;
+    private Long id;
+    private String code;
+    private String name;
+    private String permissionGroup;
 }

@@ -22,68 +22,72 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-  @Autowired
-  JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
 
-  @Autowired
-  UserDetailsServiceCustom userDetailsServiceCustom;
+    @Autowired
+    UserDetailsServiceCustom userDetailsServiceCustom;
 
-  @Autowired
-  AuthorizationService authorizationService;
+    @Autowired
+    AuthorizationService authorizationService;
 
-  @Override
-  protected void doFilterInternal(
-    HttpServletRequest request,
-    HttpServletResponse response,
-    FilterChain filterChain
-  ) throws ServletException, IOException {
-    try {
-      String jwt = getJwtFromRequest(request);
+    @Override
+    protected void doFilterInternal(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        FilterChain filterChain
+    ) throws ServletException, IOException {
+        try {
+            String jwt = getJwtFromRequest(request);
 
-      if (StringUtils.hasText(jwt)) {
-        var userClaims = jwtTokenProvider.getUserClaimsFromToken(jwt);
-        var userDetails = userDetailsServiceCustom.loadUserByUserClaims(
-          userClaims
-        );
-        boolean checkTokenResult = authorizationService.checkToken(
-          userClaims.getUserId(),
-          jwt
-        );
-        if (!checkTokenResult) {
-          Response.servletResponse(response, ApiMessageBase.UNAUTHORIZED);
-          return;
+            if (StringUtils.hasText(jwt)) {
+                var userClaims = jwtTokenProvider.getUserClaimsFromToken(jwt);
+                var userDetails = userDetailsServiceCustom.loadUserByUserClaims(
+                    userClaims
+                );
+                boolean checkTokenResult = authorizationService.checkToken(
+                    userClaims.getUserId(),
+                    jwt
+                );
+                if (!checkTokenResult) {
+                    Response.servletResponse(
+                        response,
+                        ApiMessageBase.UNAUTHORIZED
+                    );
+                    return;
+                }
+                var authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities()
+                );
+                authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+                SecurityContextHolder.getContext()
+                    .setAuthentication(authentication);
+            }
+        } catch (ApiException ex) {
+            Response.servletResponse(response, ex.getCode(), ex.getMessage());
+            return;
+        } catch (RestTemplateException ex) {
+            Response.servletResponse(response, ex.getCode(), ex.getMessage());
+            return;
+        } catch (Exception ex) {
+            Response.servletResponse(response, ApiMessageBase.UNAUTHORIZED);
+            return;
         }
-        var authentication = new UsernamePasswordAuthenticationToken(
-          userDetails,
-          null,
-          userDetails.getAuthorities()
-        );
-        authentication.setDetails(
-          new WebAuthenticationDetailsSource().buildDetails(request)
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-      }
-    } catch (ApiException ex) {
-      Response.servletResponse(response, ex.getCode(), ex.getMessage());
-      return;
-    } catch (RestTemplateException ex) {
-      Response.servletResponse(response, ex.getCode(), ex.getMessage());
-      return;
-    } catch (Exception ex) {
-      Response.servletResponse(response, ApiMessageBase.UNAUTHORIZED);
-      return;
+        filterChain.doFilter(request, response);
     }
-    filterChain.doFilter(request, response);
-  }
 
-  private String getJwtFromRequest(HttpServletRequest request) {
-    String bearerToken = request.getHeader(Constant.AUTH_HEADER);
-    if (
-      StringUtils.hasText(bearerToken) &&
-      bearerToken.startsWith(Constant.AUTH_PREFIX)
-    ) {
-      return bearerToken.substring(Constant.AUTH_PREFIX.length());
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader(Constant.AUTH_HEADER);
+        if (
+            StringUtils.hasText(bearerToken) &&
+            bearerToken.startsWith(Constant.AUTH_PREFIX)
+        ) {
+            return bearerToken.substring(Constant.AUTH_PREFIX.length());
+        }
+        return null;
     }
-    return null;
-  }
 }

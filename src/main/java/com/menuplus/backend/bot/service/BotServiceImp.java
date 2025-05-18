@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class BotServiceImp {
 
-  private BookingService bookingService;
+    private BookingService bookingService;
 
-  public void test() {
-    System.out.println("BotService test method called");
-    bookingService.test();
-  }
+    public void test() {
+        System.out.println("BotService test method called");
+        bookingService.test();
+    }
 }

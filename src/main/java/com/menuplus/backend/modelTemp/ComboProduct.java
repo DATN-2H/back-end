@@ -9,17 +9,17 @@ import lombok.*;
 @Entity
 public class ComboProduct extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  private Integer quantity = 1; // Số lượng sản phẩm trong combo
+    private Integer quantity = 1; // Số lượng sản phẩm trong combo
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "comboId", nullable = false)
-  private Combo combo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comboId", nullable = false)
+    private Combo combo;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "productId", nullable = false)
-  private Product product;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "productId", nullable = false)
+    private Product product;
 }

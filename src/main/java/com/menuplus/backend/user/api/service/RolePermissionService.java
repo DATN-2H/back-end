@@ -5,14 +5,14 @@ import com.menuplus.backend.user.api.dto.RolePermissionResponseDto;
 import java.util.List;
 
 public interface RolePermissionService {
-  List<RolePermissionResponseDto> createMany(
-    List<RolePermissionCreateDto> createDtos
-  );
+    List<RolePermissionResponseDto> createMany(
+        List<RolePermissionCreateDto> createDtos
+    );
 
-  List<RolePermissionResponseDto> upsert(
-    Long roleId,
-    List<RolePermissionCreateDto> updateDtos
-  );
+    List<RolePermissionResponseDto> upsert(
+        Long roleId,
+        List<RolePermissionCreateDto> updateDtos
+    );
 
-  void deleteByRoleId(Long roleId);
+    void deleteByRoleId(Long roleId);
 }

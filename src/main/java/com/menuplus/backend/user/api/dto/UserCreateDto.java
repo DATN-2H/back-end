@@ -10,24 +10,24 @@ import lombok.Data;
 @Data
 public class UserCreateDto {
 
-  @NotNull(message = "{account.email.null}")
-  private String email;
+    @NotNull(message = "{account.email.null}")
+    private String email;
 
-  private String username;
-  private String fullName;
-  private LocalDate birthdate;
-  private Gender gender;
-  private String phoneNumber;
-  private Boolean isFullRole = false;
-  private String password;
+    private String username;
+    private String fullName;
+    private LocalDate birthdate;
+    private Gender gender;
+    private String phoneNumber;
+    private Boolean isFullRole = false;
+    private String password;
 
-  private List<@Valid UserRoleCreateDto> userRoles;
+    private List<@Valid UserRoleCreateDto> userRoles;
 
-  public void setUsername(String username) {
-    this.username = username != null ? username.toLowerCase() : null;
-  }
+    public void setUsername(String username) {
+        this.username = username != null ? username.toLowerCase() : null;
+    }
 
-  public void setEmail(String email) {
-    this.email = email != null ? email.toLowerCase() : null;
-  }
+    public void setEmail(String email) {
+        this.email = email != null ? email.toLowerCase() : null;
+    }
 }

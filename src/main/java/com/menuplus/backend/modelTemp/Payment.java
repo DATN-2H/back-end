@@ -13,31 +13,31 @@ import lombok.*;
 @Entity
 public class Payment extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Enumerated(EnumType.STRING)
-  private PaymentMethod paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
-  @Enumerated(EnumType.STRING)
-  private PaymentFor paymentFor;
+    @Enumerated(EnumType.STRING)
+    private PaymentFor paymentFor;
 
-  @Column(nullable = false)
-  private LocalDateTime paymentDate;
+    @Column(nullable = false)
+    private LocalDateTime paymentDate;
 
-  private BigDecimal amount;
-  private BigDecimal tipAmount;
+    private BigDecimal amount;
+    private BigDecimal tipAmount;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "bookingTableId")
-  private BookingTable bookingTable;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bookingTableId")
+    private BookingTable bookingTable;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "bookingProductId")
-  private BookingProduct bookingProduct;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bookingProductId")
+    private BookingProduct bookingProduct;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "invoiceId")
-  private Invoice invoice;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invoiceId")
+    private Invoice invoice;
 }

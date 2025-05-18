@@ -14,47 +14,47 @@ import lombok.*;
 @Entity
 public class SupportTicket extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(length = 200, nullable = false)
-  private String title;
+    @Column(length = 200, nullable = false)
+    private String title;
 
-  private String description;
+    private String description;
 
-  @Enumerated(EnumType.STRING)
-  private SupportTicketStatus ticketStatus;
+    @Enumerated(EnumType.STRING)
+    private SupportTicketStatus ticketStatus;
 
-  @Enumerated(EnumType.STRING)
-  private SupportTicketType type;
+    @Enumerated(EnumType.STRING)
+    private SupportTicketType type;
 
-  private Integer rating;
-  private BigDecimal amount;
+    private Integer rating;
+    private BigDecimal amount;
 
-  // Ai tạo ticket (khách hàng)
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "customerId", nullable = false)
-  private User customer;
+    // Ai tạo ticket (khách hàng)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customerId", nullable = false)
+    private User customer;
 
-  // Nhân viên xử lý ticket
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "staffId")
-  private User staff;
+    // Nhân viên xử lý ticket
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "staffId")
+    private User staff;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "invoiceId")
-  private Invoice invoice;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invoiceId")
+    private Invoice invoice;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "bookingTableId")
-  private BookingTable bookingTable;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bookingTableId")
+    private BookingTable bookingTable;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "bookingProductId")
-  private BookingProduct bookingProduct;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bookingProductId")
+    private BookingProduct bookingProduct;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "orderId")
-  private Order order;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orderId")
+    private Order order;
 }

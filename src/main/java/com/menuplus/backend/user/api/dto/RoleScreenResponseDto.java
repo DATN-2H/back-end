@@ -8,9 +8,9 @@ import lombok.EqualsAndHashCode;
 @Data
 public class RoleScreenResponseDto extends BaseResponseDto {
 
-  private Long id;
-  private Long roleId;
-  private Long screenId;
+    private Long id;
+    private Long roleId;
+    private Long screenId;
 
-  private ScreenResponseDto screen;
+    private ScreenResponseDto screen;
 }

@@ -9,15 +9,15 @@ import lombok.*;
 @Entity
 public class BookingTableTable extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "bookingTableId", nullable = false)
-  private BookingTable bookingTable;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bookingTableId", nullable = false)
+    private BookingTable bookingTable;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "tableId", nullable = false)
-  private RestaurantTable table;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tableId", nullable = false)
+    private RestaurantTable table;
 }

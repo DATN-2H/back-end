@@ -1,6 +1,7 @@
 package com.menuplus.backend.modelTemp;
 
 import com.menuplus.backend.library.common.EntityBase;
+import com.menuplus.backend.user.model.Configuration;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,19 +11,19 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class IntegrationConfig extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(nullable = false, unique = true, length = 100)
-  private String serviceName;
+    @Column(nullable = false, unique = true, length = 100)
+    private String serviceName;
 
-  @Column(nullable = false)
-  private String apiKey;
+    @Column(nullable = false)
+    private String apiKey;
 
-  private String purpose;
+    private String purpose;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "configurationId", nullable = false)
-  private Configuration configuration;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "configurationId", nullable = false)
+    private Configuration configuration;
 }

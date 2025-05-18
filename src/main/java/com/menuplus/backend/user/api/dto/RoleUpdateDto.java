@@ -9,12 +9,13 @@ import lombok.Data;
 @Data
 public class RoleUpdateDto {
 
-  @NotEmpty
-  private String name;
+    @NotEmpty
+    private String name;
 
-  private String description;
-  private GeneralStatus status;
+    private String description;
+    private String hexColor;
+    private GeneralStatus status;
 
-  private List<@Valid RolePermissionCreateDto> rolePermissions;
-  private List<@Valid RoleScreenCreateDto> roleScreens;
+    private List<@Valid RolePermissionCreateDto> rolePermissions;
+    private List<@Valid RoleScreenCreateDto> roleScreens;
 }

@@ -19,74 +19,74 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserDetailsCustom implements UserDetails {
 
-  private Long userId;
+    private Long userId;
 
-  private String username;
+    private String username;
 
-  private String password;
+    private String password;
 
-  private Collection<? extends GrantedAuthority> authorities;
+    private Collection<? extends GrantedAuthority> authorities;
 
-  public UserDetailsCustom(UserClaims userClaims) {
-    this.authorities = new ArrayList<>();
-    this.userId = userClaims.getUserId();
-    this.username = userClaims.getEmail();
-  }
-
-  public static UserDetailsCustom getCurrentUser() {
-    try {
-      Authentication authentication = SecurityContextHolder.getContext()
-        .getAuthentication();
-      if (!authentication.isAuthenticated()) {
-        return null;
-      }
-
-      return (UserDetailsCustom) authentication.getPrincipal();
-    } catch (Exception ex) {
-      return null;
+    public UserDetailsCustom(UserClaims userClaims) {
+        this.authorities = new ArrayList<>();
+        this.userId = userClaims.getUserId();
+        this.username = userClaims.getEmail();
     }
-  }
 
-  public static Long getCurrentUserId() {
-    return getCurrentUser().getUserId();
-  }
+    public static UserDetailsCustom getCurrentUser() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+            if (!authentication.isAuthenticated()) {
+                return null;
+            }
 
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return authorities;
-  }
+            return (UserDetailsCustom) authentication.getPrincipal();
+        } catch (Exception ex) {
+            return null;
+        }
+    }
 
-  @Override
-  public String getPassword() {
-    return password;
-  }
+    public static Long getCurrentUserId() {
+        return getCurrentUser().getUserId();
+    }
 
-  @Override
-  public String getUsername() {
-    return username;
-  }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
 
-  @JsonIgnore
-  @Override
-  public boolean isAccountNonExpired() {
-    return true;
-  }
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
-  @JsonIgnore
-  @Override
-  public boolean isAccountNonLocked() {
-    return true;
-  }
+    @Override
+    public String getUsername() {
+        return username;
+    }
 
-  @JsonIgnore
-  @Override
-  public boolean isCredentialsNonExpired() {
-    return true;
-  }
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-  @JsonIgnore
-  @Override
-  public boolean isEnabled() {
-    return true;
-  }
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

@@ -10,15 +10,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class BackendApplicationTests {
-  //  @Test
-  //  void writeDocumentationSnippets() {
-  //    var modules = ApplicationModules.of(
-  //      BackendApplication.class,
-  //      JavaClass.Predicates.resideInAnyPackage("com.menuplus.backend.library..")
-  //    ).verify();
-  //
-  //    new Documenter(modules)
-  //      .writeModulesAsPlantUml()
-  //      .writeIndividualModulesAsPlantUml();
-  //  }
+    //  @Test
+    //  void writeDocumentationSnippets() {
+    //    var modules = ApplicationModules.of(
+    //      BackendApplication.class,
+    //      JavaClass.Predicates.resideInAnyPackage("com.menuplus.backend.library..")
+    //    ).verify();
+    //
+    //    new Documenter(modules)
+    //      .writeModulesAsPlantUml()
+    //      .writeIndividualModulesAsPlantUml();
+    //  }
 }

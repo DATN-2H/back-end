@@ -11,21 +11,21 @@ import lombok.ToString;
 @Entity
 public class UserRole extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  private Long userId;
-  private Long roleId;
+    private Long userId;
+    private Long roleId;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(
-    name = "roleId",
-    referencedColumnName = "id",
-    insertable = false,
-    updatable = false
-  )
-  @EqualsAndHashCode.Exclude
-  @ToString.Exclude
-  private Role role;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+        name = "roleId",
+        referencedColumnName = "id",
+        insertable = false,
+        updatable = false
+    )
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Role role;
 }

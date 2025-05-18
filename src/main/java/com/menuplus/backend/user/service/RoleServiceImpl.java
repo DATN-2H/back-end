@@ -27,184 +27,191 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-  @Autowired
-  private RoleRepository roleRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
-  @Autowired
-  private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-  @Autowired
-  private RolePermissionService rolePermissionService;
+    @Autowired
+    private RolePermissionService rolePermissionService;
 
-  @Autowired
-  private RoleScreenService roleScreenService;
+    @Autowired
+    private RoleScreenService roleScreenService;
 
-  @Autowired
-  private AuthorizationService authorizationService;
+    @Autowired
+    private AuthorizationService authorizationService;
 
-  @Autowired
-  private PersistentUtil persistentUtil;
+    @Autowired
+    private PersistentUtil persistentUtil;
 
-  @Override
-  @Transactional
-  public RoleResponseDto create(RoleCreateDto createDto) {
-    Role role = RoleMapper.createEntity(createDto);
-    roleRepository.save(role);
-    var rolePermissions = createDto.getRolePermissions();
-    if (rolePermissions != null) {
-      rolePermissions.forEach(rp -> rp.setRoleId(role.getId()));
-      rolePermissionService.createMany(rolePermissions);
+    @Override
+    @Transactional
+    public RoleResponseDto create(RoleCreateDto createDto) {
+        Role role = RoleMapper.createEntity(createDto);
+        roleRepository.save(role);
+        var rolePermissions = createDto.getRolePermissions();
+        if (rolePermissions != null) {
+            rolePermissions.forEach(rp -> rp.setRoleId(role.getId()));
+            rolePermissionService.createMany(rolePermissions);
+        }
+
+        var roleScreens = createDto.getRoleScreens();
+        if (roleScreens != null) {
+            roleScreens.forEach(rs -> rs.setRoleId(role.getId()));
+            roleScreenService.createMany(roleScreens);
+        }
+
+        persistentUtil.flushAndClear();
+        return detail(role.getId());
     }
 
-    var roleScreens = createDto.getRoleScreens();
-    if (roleScreens != null) {
-      roleScreens.forEach(rs -> rs.setRoleId(role.getId()));
-      roleScreenService.createMany(roleScreens);
+    @Override
+    @Transactional
+    public RoleResponseDto update(Long id, RoleUpdateDto updateDto) {
+        Role role = get(id);
+
+        //    if (isNeedLogout(role, updateDto)) {
+        //      List<User> users = userRepository.findByUserRoles_RoleId(role.getId());
+        //      authorizationService.removeToken(
+        //        users.stream().map(User::getId).collect(Collectors.toList())
+        //      );
+        //    }
+
+        MapUtil.copyUpdateProperties(updateDto, role);
+        roleRepository.save(role);
+
+        //    var rolePermissions = updateDto.getRolePermissions();
+        //    if (rolePermissions != null) {
+        //      rolePermissions.forEach(rp -> rp.setRoleId(role.getId()));
+        //    }
+        //    rolePermissionService.upsert(role.getId(), rolePermissions);
+
+        //    var roleScreens = updateDto.getRoleScreens();
+        //    if (roleScreens != null) {
+        //      roleScreens.forEach(rs -> rs.setRoleId(role.getId()));
+        //    }
+        //    roleScreenService.upsert(role.getId(), roleScreens);
+
+        persistentUtil.flushAndClear();
+        return detail(role.getId());
     }
 
-    persistentUtil.flushAndClear();
-    return detail(role.getId());
-  }
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        Role role = get(id);
 
-  @Override
-  @Transactional
-  public RoleResponseDto update(Long id, RoleUpdateDto updateDto) {
-    Role role = get(id);
-
-    if (isNeedLogout(role, updateDto)) {
-      List<User> users = userRepository.findByUserRoles_RoleId(role.getId());
-      authorizationService.removeToken(
-        users.stream().map(User::getId).collect(Collectors.toList())
-      );
+        rolePermissionService.deleteByRoleId(id);
+        roleScreenService.deleteByRoleId(id);
+        roleRepository.delete(role);
     }
 
-    MapUtil.copyUpdateProperties(updateDto, role);
-    roleRepository.save(role);
+    @Override
+    @Transactional
+    public RoleResponseDto detail(Long id) {
+        Role role = get(id);
 
-    var rolePermissions = updateDto.getRolePermissions();
-    if (rolePermissions != null) {
-      rolePermissions.forEach(rp -> rp.setRoleId(role.getId()));
+        return RoleMapper.createResponse(role);
     }
-    rolePermissionService.upsert(role.getId(), rolePermissions);
 
-    var roleScreens = updateDto.getRoleScreens();
-    if (roleScreens != null) {
-      roleScreens.forEach(rs -> rs.setRoleId(role.getId()));
+    @Override
+    @Transactional
+    public List<RoleResponseDto> list() {
+        List<Role> roles = roleRepository.findAll();
+        List<RoleResponseDto> result = new ArrayList<>();
+        for (Role role : roles) {
+            RoleResponseDto dto = RoleMapper.createResponse(
+                role,
+                RoleMapper.ListExcludeFields
+            );
+            result.add(dto);
+        }
+        return result;
     }
-    roleScreenService.upsert(role.getId(), roleScreens);
 
-    persistentUtil.flushAndClear();
-    return detail(role.getId());
-  }
-
-  @Override
-  @Transactional
-  public void delete(Long id) {
-    Role role = get(id);
-
-    rolePermissionService.deleteByRoleId(id);
-    roleScreenService.deleteByRoleId(id);
-    roleRepository.delete(role);
-  }
-
-  @Override
-  @Transactional
-  public RoleResponseDto detail(Long id) {
-    Role role = get(id);
-
-    return RoleMapper.createResponse(role);
-  }
-
-  @Override
-  @Transactional
-  public List<RoleResponseDto> list() {
-    List<Role> roles = roleRepository.findAll();
-    List<RoleResponseDto> result = new ArrayList<>();
-    for (Role role : roles) {
-      RoleResponseDto dto = RoleMapper.createResponse(
-        role,
-        RoleMapper.ListExcludeFields
-      );
-      result.add(dto);
+    private Role get(Long id) {
+        Optional<Role> roleOpt = roleRepository.findById(id);
+        if (roleOpt.isEmpty()) {
+            throw new ApiException(ApiUserMessage.ROLE_NOT_FOUND);
+        }
+        return roleOpt.get();
     }
-    return result;
-  }
 
-  private Role get(Long id) {
-    Optional<Role> roleOpt = roleRepository.findById(id);
-    if (roleOpt.isEmpty()) {
-      throw new ApiException(ApiUserMessage.ROLE_NOT_FOUND);
-    }
-    return roleOpt.get();
-  }
-
-  private boolean isNeedLogout(Role role, RoleUpdateDto updateDto) {
-    if (
-      CollectionUtils.size(role.getRolePermissions()) !=
-      CollectionUtils.size(updateDto.getRolePermissions())
-    ) {
-      return true;
-    }
-    if (
-      CollectionUtils.size(role.getRoleScreens()) !=
-      CollectionUtils.size(updateDto.getRoleScreens())
-    ) {
-      return true;
-    }
-    if (CollectionUtils.isNotEmpty(updateDto.getRoleScreens())) {
-      List<Long> currentScreens = role
-        .getRoleScreens()
-        .stream()
-        .map(RoleScreen::getScreenId)
-        .collect(Collectors.toList());
-      List<Long> updateScreens = updateDto
-        .getRoleScreens()
-        .stream()
-        .map(RoleScreenCreateDto::getScreenId)
-        .collect(Collectors.toList());
-      if (!CollectionUtils.isEqualCollection(currentScreens, updateScreens)) {
-        return true;
-      }
-    }
-    if (CollectionUtils.isNotEmpty(updateDto.getRolePermissions())) {
-      Map<Long, RolePermission> currentPermissionMap = role
-        .getRolePermissions()
-        .stream()
-        .collect(
-          Collectors.toMap(RolePermission::getPermissionId, Function.identity())
-        );
-      Map<Long, RolePermissionCreateDto> updatePermissionMap = updateDto
-        .getRolePermissions()
-        .stream()
-        .collect(
-          Collectors.toMap(
-            RolePermissionCreateDto::getPermissionId,
-            Function.identity()
-          )
-        );
-      for (var entry : currentPermissionMap.entrySet()) {
-        RolePermission currentRolePermission = entry.getValue();
-        RolePermissionCreateDto updateRolePermission = updatePermissionMap.get(
-          entry.getKey()
-        );
+    private boolean isNeedLogout(Role role, RoleUpdateDto updateDto) {
         if (
-          !Objects.equals(
-            currentRolePermission.getIsLimitedByOwner(),
-            updateRolePermission.getIsLimitedByOwner()
-          )
+            CollectionUtils.size(role.getRolePermissions()) !=
+            CollectionUtils.size(updateDto.getRolePermissions())
         ) {
-          return true;
+            return true;
         }
         if (
-          !Objects.equals(
-            currentRolePermission.getLimitedIp(),
-            updateRolePermission.getLimitedIp()
-          )
+            CollectionUtils.size(role.getRoleScreens()) !=
+            CollectionUtils.size(updateDto.getRoleScreens())
         ) {
-          return true;
+            return true;
         }
-      }
+        if (CollectionUtils.isNotEmpty(updateDto.getRoleScreens())) {
+            List<Long> currentScreens = role
+                .getRoleScreens()
+                .stream()
+                .map(RoleScreen::getScreenId)
+                .collect(Collectors.toList());
+            List<Long> updateScreens = updateDto
+                .getRoleScreens()
+                .stream()
+                .map(RoleScreenCreateDto::getScreenId)
+                .collect(Collectors.toList());
+            if (
+                !CollectionUtils.isEqualCollection(
+                    currentScreens,
+                    updateScreens
+                )
+            ) {
+                return true;
+            }
+        }
+        if (CollectionUtils.isNotEmpty(updateDto.getRolePermissions())) {
+            Map<Long, RolePermission> currentPermissionMap = role
+                .getRolePermissions()
+                .stream()
+                .collect(
+                    Collectors.toMap(
+                        RolePermission::getPermissionId,
+                        Function.identity()
+                    )
+                );
+            Map<Long, RolePermissionCreateDto> updatePermissionMap = updateDto
+                .getRolePermissions()
+                .stream()
+                .collect(
+                    Collectors.toMap(
+                        RolePermissionCreateDto::getPermissionId,
+                        Function.identity()
+                    )
+                );
+            for (var entry : currentPermissionMap.entrySet()) {
+                RolePermission currentRolePermission = entry.getValue();
+                RolePermissionCreateDto updateRolePermission =
+                    updatePermissionMap.get(entry.getKey());
+                if (
+                    !Objects.equals(
+                        currentRolePermission.getIsLimitedByOwner(),
+                        updateRolePermission.getIsLimitedByOwner()
+                    )
+                ) {
+                    return true;
+                }
+                if (
+                    !Objects.equals(
+                        currentRolePermission.getLimitedIp(),
+                        updateRolePermission.getLimitedIp()
+                    )
+                ) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-    return false;
-  }
 }

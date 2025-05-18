@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class UserUpdatePasswordDto {
 
-  private String password;
-  private Boolean isSent;
+    private String password;
+    private Boolean isSent;
 }

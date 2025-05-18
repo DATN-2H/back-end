@@ -15,21 +15,21 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 @Slf4j
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-  @Override
-  public void commence(
-    HttpServletRequest request,
-    HttpServletResponse response,
-    AuthenticationException e
-  ) throws IOException, ServletException {
-    Authentication auth = SecurityContextHolder.getContext()
-      .getAuthentication();
-    if (auth != null) {
-      log.info(
-        "User: {} attempted to access the protected URL: {}",
-        auth.getName(),
-        request.getRequestURI()
-      );
+    @Override
+    public void commence(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        AuthenticationException e
+    ) throws IOException, ServletException {
+        Authentication auth = SecurityContextHolder.getContext()
+            .getAuthentication();
+        if (auth != null) {
+            log.info(
+                "User: {} attempted to access the protected URL: {}",
+                auth.getName(),
+                request.getRequestURI()
+            );
+        }
+        Response.servletResponse(response, ApiMessageBase.FORBIDDEN);
     }
-    Response.servletResponse(response, ApiMessageBase.FORBIDDEN);
-  }
 }

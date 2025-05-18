@@ -10,14 +10,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-  User findByEmail(String email);
+    User findByEmail(String email);
 
-  User findByEmailAndStatusIsNot(String email, GeneralStatus status);
+    User findByEmailAndStatusIsNot(String email, GeneralStatus status);
 
-  User findFirstByIsFullRoleOrderByIdAsc(Boolean isFullRole);
+    User findFirstByIsFullRoleOrderByIdAsc(Boolean isFullRole);
 
-  @Query("select u.id from User u")
-  List<Long> findAllIds();
+    @Query("select u.id from User u")
+    List<Long> findAllIds();
 
-  List<User> findByUserRoles_RoleId(Long roleId);
+    List<User> findByUserRoles_RoleId(Long roleId);
+
+    User findByIsManagerAndBranchId(Boolean isManager, Long branchId);
 }

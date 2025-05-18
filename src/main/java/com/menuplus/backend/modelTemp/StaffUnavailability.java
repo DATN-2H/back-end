@@ -12,19 +12,19 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class StaffUnavailability extends EntityBase {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(nullable = false)
-  private LocalDateTime startTime;
+    @Column(nullable = false)
+    private LocalDateTime startTime;
 
-  @Column(nullable = false)
-  private LocalDateTime endTime;
+    @Column(nullable = false)
+    private LocalDateTime endTime;
 
-  private String reason;
+    private String reason;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "staffId", nullable = false)
-  private User staff;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "staffId", nullable = false)
+    private User staff;
 }

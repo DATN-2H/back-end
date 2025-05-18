@@ -6,9 +6,9 @@ import com.menuplus.backend.user.model.Screen;
 
 public class ScreenMapper {
 
-  public static ScreenResponseDto createResponse(Screen entity) {
-    ScreenResponseDto responseDto = new ScreenResponseDto();
-    MapUtil.copyResponseProperties(entity, responseDto);
-    return responseDto;
-  }
+    public static ScreenResponseDto createResponse(Screen entity) {
+        ScreenResponseDto responseDto = new ScreenResponseDto();
+        MapUtil.copyResponseProperties(entity, responseDto);
+        return responseDto;
+    }
 }

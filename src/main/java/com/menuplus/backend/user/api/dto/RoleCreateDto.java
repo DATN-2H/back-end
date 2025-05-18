@@ -10,12 +10,13 @@ import lombok.Data;
 @Data
 public class RoleCreateDto {
 
-  @NotNull
-  private SystemRole name;
+    @NotNull
+    private SystemRole name;
 
-  private String description;
-  private GeneralStatus status;
+    private String description;
+    private GeneralStatus status;
+    private String hexColor;
 
-  private List<@Valid RolePermissionCreateDto> rolePermissions;
-  private List<@Valid RoleScreenCreateDto> roleScreens;
+    private List<@Valid RolePermissionCreateDto> rolePermissions;
+    private List<@Valid RoleScreenCreateDto> roleScreens;
 }
